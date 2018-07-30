@@ -85,8 +85,8 @@ train_datagen =  ImageDataGenerator(
 test_datagen = ImageDataGenerator(
 )
 
-train_generator = train_datagen.flow_from_directory(
-    train_dir,
+train_generator = train_datagen.flow(
+    ,
     target_size=(IM_WIDTH, IM_HEIGHT),
     batch_size=batch_size,
 )

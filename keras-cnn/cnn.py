@@ -1,6 +1,6 @@
 from keras.datasets import mnist
 from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Dropout, Dense, Flatten
+from keras.layers import Conv2D, MaxPooling2D, Dropout, Dense, Flatten, LeakyReLU, AveragePooling2D,GlobalAveragePooling2D
 from keras.utils import np_utils
 from wandb.keras import WandbCallback
 import wandb
@@ -29,14 +29,19 @@ labels=range(10)
 model = Sequential()
 model.add(Conv2D(32,
     (config.first_layer_conv_width, config.first_layer_conv_height),
-    input_shape=(28, 28,1),
-    activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+    input_shape=(28, 28,1),activation="relu"))
+#model.add(LeakyReLU(alpha=0.2))
+model.add(MaxPooling2D(pool_size=(2, 2),padding="same"))
+model.add(Dropout(0.3))
+model.add(Conv2D(16,(config.first_layer_conv_width, config.first_layer_conv_height)))
+model.add(MaxPooling2D(pool_size=(2, 2),padding="same"))
+model.add(Dropout(0.3))
 model.add(Flatten())
 model.add(Dense(config.dense_layer_size, activation='relu'))
+model.add(Dropout(0.3))
 model.add(Dense(num_classes, activation='softmax'))
 
-model.compile(loss='categorical_crossentropy', optimizer='adam',
+model.compile(loss='categorical_crossentropy', optimizer='rmsprop',
                 metrics=['accuracy'])
 
 
